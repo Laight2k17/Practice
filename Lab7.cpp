@@ -48,7 +48,7 @@ int* mas_x(int(*a)[N], int* x,  //Находим величину X
     void (*pfunc)(int[N][N]))
 {
     int i, j, min;
-    pfunc(a); //
+    pfunc(a); //Вызов через указатель одной из двух функций ввода элементов a
     for (i = 0; i < N; i++) {
 
         min = a[i][0];
@@ -69,7 +69,75 @@ int* mas_x(int(*a)[N], int* x,  //Находим величину X
     return x;
 }
 
+int elem_y(int y, const int a[][N], int i, int* x) //Находим величину Y
+{
+    int k = 0;
+    if (i <= 5)
+    {
+        if (x[i] == 1)
+            k = i;
+        y = elem_y(y, a, i + 1, x);
+        if (y == 0)
+            y = k;
+    }
+    else
+    {
+        y = 0;
+        return y;
+    }
+    return y;
+}
 
+void output(const int  y, const int x[], const int a[][N])
+{
+    int i, j;
+    FILE* fp;
+
+    cout << "Массив A:\n";
+    for (i = 0; i < N; i++)
+    {
+        for (j = 0; j < N; j++)
+            cout << a[i][j] << " ";
+        cout << "\n";
+    }
+
+    cout << "Массив x:\n";
+    for (i = 0; i < N; i++)
+        cout << x[i] << " ";
+
+    cout << "\n";
+    if (y != 0)
+    {
+        cout << "Значение Y: " << y;
+    }
+    else
+        cout << "Элементы равные единице отсутствуют.";
+
+    fopen_s(&fp, "out.txt", "w");
+    if (fp)
+    {
+        fprintf(fp, "Матрица A:\n");
+        for (i = 0; i < N; i++)
+        {
+            for (j = 0; j < N; j++)
+                fprintf(fp, "%5d", a[i][j]);
+            fprintf(fp, "\n");
+        }
+        fprintf(fp, "Массив X:\n");
+        for (i = 0; i < N; i++)
+            fprintf(fp, "%5d", x[i]);
+        fprintf(fp, "\n");
+        if (y != 0)
+        {
+            fprintf(fp, "Величина Y:");
+            fprintf(fp, "%3d", y);
+        }
+        else
+            fprintf(fp, "Элементы равные единице отсутствуют.");
+        fclose(fp);
+    }
+    else cout << "Ошибка открытия. \n";
+}
 
 int main()
 {
@@ -79,9 +147,10 @@ int main()
     y = 0;
     do
     {
-        cout << ": ";
+        cout << "Выберите ввод массива (1 с клавиатуры, 2 из файла): ";
         cin >> v;
     } while (v != 1 && v != 2);
-    if (v == 1) pfunc = &init;
+    if (v == 1) pfunc = &init;// Присваивание указателю адреса одной из функций 
     else pfunc = &init_f;
+    output(elem_y(y, a, 0, x), mas_x(a, x, pfunc), a);
 }
