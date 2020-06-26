@@ -32,6 +32,31 @@ void init_f(int a[N][N]) //Считывание массива из txt файла
     else cout << "Ошибка открытия файла. \n";
 }
 
+int* mas_x(int(*a)[N], int* x,  //Находим величину X
+    void (*pfunc)(int[N][N]))
+{
+    int i, j, min;
+    pfunc(a); //
+    for (i = 0; i < N; i++) {
+
+        min = a[i][0];
+
+        for (j = 0; j < N; j++) {
+
+            if (a[i][j] < min) {
+                min = a[i][j];
+            }
+        }
+        x[i] = min;
+
+        if (min < 0)
+            x[i] = -1;
+        else
+            x[i] = 1;
+    }
+    return x;
+}
+
 int main()
 {
     setlocale(LC_CTYPE, "");
