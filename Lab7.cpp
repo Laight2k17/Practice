@@ -57,6 +57,8 @@ int* mas_x(int(*a)[N], int* x,  //Находим величину X
     return x;
 }
 
+
+
 int main()
 {
     setlocale(LC_CTYPE, "");
